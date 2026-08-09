@@ -1,58 +1,40 @@
 import secrets
 
-# ! Deixar tudo em inglês.
 
+def encrypt_password(length: int = 64, numbers: bool = True, special: bool = True):
+    if length < 6 or length > 256:
+        return "The password length must be between 6 and 256 characters. Please try again."
 
-def criptografar_senha(tamanho: int = 64, numeros: bool = True, especiais: bool = True):
-    if tamanho < 6 or tamanho > 256:
-        return "O tamanho deve estar entre 6 a 256. Tente novamente"
+    UPPERCASE = "abcdefghijklmnopqrstuvwxyz"
+    LOWERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    NUMBERS = "0123456789"
+    SPECIALS = "!@#$%^&*()-_=+?"
 
-    # Caracteres disponíveis separados por tipos
-    MINUSCULOS = "abcdefghijklmnopqrstuvwxyz"
-    MAIUSCULOS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    NUMEROS = "0123456789"
-    ESPECIAIS = "!@#$%^&*()-_=+?"
+    characters = UPPERCASE + LOWERCASE
+    if numbers:
+        characters += NUMBERS
+    if special:
+        characters += SPECIALS
 
-    # Adiciona os caracteres permitidos
-    caracteres = MINUSCULOS + MAIUSCULOS
-    if numeros:
-        caracteres += NUMEROS
-    if especiais:
-        caracteres += ESPECIAIS
+    password = ""
+    for _ in range(length):
+        password += secrets.choice(characters)
 
-    # Gera a senha
-    senha = ""
-    for _ in range(tamanho):
-        senha += secrets.choice(caracteres)
+    return password
 
-    return senha
+FILE = "passwords.txt"
+length = int(input("Enter the password length (between 1 and 256): "))
+numbers = bool(input("Allow numbers? (Type any key and press ENTER for yes, or leave blank)"))
+special = bool(input("Allow special characters? Example: !@#$%^&*()-_=+? (Type any key and press ENTER if yes, or leave blank if no)"))
+quantity = int(input(f"How many passwords do you want to generate with a length of {length} characters? (Between 1 and 100):"))
 
+if quantity >= 1 and quantity <= 100:
+    save = bool(f"Do you want to save the {quantity} generated passwords to a file named senhas.txt? (Type any key and press ENTER to save, or leave blank if not):")
 
-ARQUIVO = "senhas.txt"
-tamanho = int(input("Insira o tamanho da senha (entre 1 a 256): "))
-numeros = bool(
-    input(
-        "Permitir números? (Digite qualquer tecla e aperte ENTER se sim ou se não deixe em branco)"
-    )
-)
-especiais = bool(
-    input(
-        "Permitir caracteres especiais? Exemplo: !@#$%^&*()-_=+? (Digite qualquer tecla e aperte ENTER se sim ou se não deixe em branco)"
-    )
-)
-quantidade = int(
-    input(f"Quantas senhas deseja gerar com o tamanho de {tamanho} caracteres?: ")
-)
+    for _ in range(quantity):
+        password = encrypt_password(length, numbers, special)
+        print(password)
 
-if quantidade > 1 and quantidade < 100:
-    salvar = bool(
-        f"Deseja salvar as {quantidade} senhas geradas num arquivo senhas.txt? (Digite qualquer tecla e aperte ENTER se sim ou se não deixe em branco): "
-    )
-
-    for x in range(quantidade):
-        senha = criptografar_senha(tamanho, numeros, especiais)
-        print(senha)
-
-        if salvar:
-            with open(ARQUIVO, "a+", encoding="utf-8") as f:
-                f.write(f"{senha}\n")
+        if save:
+            with open(FILE, "a+", encoding="utf-8") as f:
+                f.write(f"{password}\n\n")
