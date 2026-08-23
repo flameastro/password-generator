@@ -2,6 +2,8 @@
 
 A simple and secure password generator made with Python.
 
+<img src="assets/terminal.gif">
+
 ## 🧐 Why I created this
 
 As time goes by, password-related attacks become increasingly common. Weak and reused passwords can put your accounts and personal information at risk.
